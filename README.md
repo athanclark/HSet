@@ -1,31 +1,35 @@
-# exi-map
+# HSet
 
-TODO: Write description here
+A simple implementation of heterogeneous sets
+in Haskell, assuming they implement `Typeable`:
 
-## Installation
+```haskell
+{-# LANGUAGE
+    DeriveDataTypeable
+  , ScopedTypeVariables
+  #-}
 
-TODO: Write installation instructions here
+import Data.Typeable
+import Data.HSet.Mutable as HSet
+import Control.Monad.ST
 
-## Usage
 
-### Creating `x`
+data Foo = Foo
+  { foo1 :: Int
+  , foo2 :: Int
+  } deriving (Typeable)
 
-TODO: Write usage instructions here
+data Bar = Bar
+  { bar1 :: Double
+  } deriving (Typeable)
 
-### Combining `x`
 
-TODO: Write usage instructions here
-
-### Consuming `x`
-
-TODO: Write usage instructions here
-
-## How to run tests
-
+mySet :: ST s (HSet s)
+mySet = do
+  xs <- HSet.new
+  (fooKey :: HKey Foo) <- HSet.insert (Foo 1 2) xs
+  (barKey :: HKey Bar) <- HSet.insert (Bar 3.45) xs
 ```
-cabal configure --enable-tests && cabal build && cabal test
-```
 
-## Contributing
-
-TODO: Write contribution instructions here
+You can then do lookups and deletions with the
+`fooKey` and `barKey` mutable references.

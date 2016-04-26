@@ -1,4 +1,11 @@
-module Data.HSet.Mutable where
+module Data.HSet.Mutable
+  ( HKey
+  , HSet
+  , new
+  , insert
+  , lookup
+  , delete
+  ) where
 
 import Data.HSet.Types
 

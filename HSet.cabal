@@ -16,25 +16,9 @@ Library
   Exposed-Modules:      Data.HSet.Mutable
   Other-Modules:        Data.HSet.Types
   Build-Depends:        base >= 4.8 && < 5
-                      , poly-arity
                       , containers
                       , hashtables
                       , hashable
-                      , unordered-containers
-
-Test-Suite spec
-  Type:                 exitcode-stdio-1.0
-  Default-Language:     Haskell2010
-  Hs-Source-Dirs:       src
-                      , test
-  Ghc-Options:          -Wall
-  Main-Is:              Spec.hs
-  Build-Depends:        base
-                      , tasty
-                      , tasty-quickcheck
-                      , tasty-hunit
-                      , QuickCheck
-                      , quickcheck-instances
 
 Source-Repository head
   Type:                 git

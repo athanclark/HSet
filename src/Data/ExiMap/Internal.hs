@@ -1,0 +1,68 @@
+{-# LANGUAGE
+    DeriveGeneric
+  #-}
+
+module Data.ExiMap.Internal where
+
+import Prelude hiding (lookup, length)
+
+import Data.Maybe (fromMaybe)
+
+import Data.Typeable
+import Data.Typeable.Internal (Fingerprint (..), TypeRep (TypeRep))
+import Data.Dynamic
+
+import GHC.Generics
+import Data.Hashable
+import           Data.HashTable.ST.Basic (HashTable)
+import qualified Data.HashTable.ST.Basic as HT
+
+import Control.Monad.ST
+
+
+data HKey' = HKey'
+  { getTypeIndex :: {-# UNPACK #-} !Fingerprint
+  , getTypeCount :: {-# UNPACK #-} !Int
+  } deriving (Eq, Generic)
+
+instance Hashable Fingerprint where
+  hashWithSalt s (Fingerprint x y) =
+    s `hashWithSalt` x `hashWithSalt` y
+
+instance Hashable HKey'
+
+newtype HKey a = HKey
+  { getHKey :: HKey'
+  } deriving (Eq)
+
+
+data HSet s = HSet
+  { hSetValues :: {-# UNPACK #-} !(HashTable s HKey' Dynamic)
+  , hSetCount  :: {-# UNPACK #-} !(HashTable s Fingerprint Int)
+  }
+
+
+new :: ST s (HSet s)
+new = HSet <$> HT.new <*> HT.new
+
+
+insert :: ( Typeable a
+          ) => a -> HSet s -> ST s (HKey a)
+insert x (HSet xs count) = do
+  let (TypeRep f _ _ _) = typeOf x
+  c <- fromMaybe 0 <$> HT.lookup count f
+  HT.insert count f (c+1)
+  let k = HKey' f c
+  HT.insert xs k (toDyn x)
+  pure (HKey k)
+
+
+lookup :: ( Typeable a
+          ) => HKey a -> HSet s -> ST s (Maybe a)
+lookup (HKey k) (HSet xs _) = (>>= fromDynamic) <$> HT.lookup xs k
+
+
+delete :: HKey a -> HSet s -> ST s ()
+delete (HKey k@(HKey' f _)) (HSet xs count) = do
+  HT.delete count f
+  HT.delete xs k

@@ -1,10 +1,10 @@
-Name:                   exi-map
+Name:                   HSet
 Version:                0.0.0
 Author:                 Athan Clark <athan.clark@gmail.com>
 Maintainer:             Athan Clark <athan.clark@gmail.com>
 License:                BSD3
 License-File:           LICENSE
--- Synopsis:
+Synopsis:               Foux heterogeneous sets
 -- Description:
 Cabal-Version:          >= 1.10
 Build-Type:             Simple
@@ -13,13 +13,14 @@ Library
   Default-Language:     Haskell2010
   HS-Source-Dirs:       src
   GHC-Options:          -Wall
-  Exposed-Modules:      Data.ExiMap
-  Other-Modules:        Data.ExiMap.Internal
-  Build-Depends:        base >= 4.6 && < 5
+  Exposed-Modules:      Data.HSet.Mutable
+  Other-Modules:        Data.HSet.Types
+  Build-Depends:        base >= 4.8 && < 5
                       , poly-arity
                       , containers
                       , hashtables
                       , hashable
+                      , unordered-containers
 
 Test-Suite spec
   Type:                 exitcode-stdio-1.0

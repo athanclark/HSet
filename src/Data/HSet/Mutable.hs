@@ -1,39 +1,17 @@
-{-# LANGUAGE
-    DeriveGeneric
-  #-}
+module Data.HSet.Mutable where
 
-module Data.ExiMap.Internal where
+import Data.HSet.Types
 
 import Prelude hiding (lookup, length)
-
 import Data.Maybe (fromMaybe)
 
-import Data.Typeable
-import Data.Typeable.Internal (Fingerprint (..), TypeRep (TypeRep))
+import Data.Typeable.Internal (Fingerprint, TypeRep (TypeRep))
 import Data.Dynamic
 
-import GHC.Generics
-import Data.Hashable
 import           Data.HashTable.ST.Basic (HashTable)
 import qualified Data.HashTable.ST.Basic as HT
-
 import Control.Monad.ST
 
-
-data HKey' = HKey'
-  { getTypeIndex :: {-# UNPACK #-} !Fingerprint
-  , getTypeCount :: {-# UNPACK #-} !Int
-  } deriving (Eq, Generic)
-
-instance Hashable Fingerprint where
-  hashWithSalt s (Fingerprint x y) =
-    s `hashWithSalt` x `hashWithSalt` y
-
-instance Hashable HKey'
-
-newtype HKey a = HKey
-  { getHKey :: HKey'
-  } deriving (Eq)
 
 
 data HSet s = HSet

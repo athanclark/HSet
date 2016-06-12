@@ -31,7 +31,7 @@ new :: ST s (HSet s)
 new = HSet <$> HT.new <*> HT.new
 
 
-insert :: ( Typeable a ) => a -> HSet s -> ST s (HKey a)
+insert :: Typeable a => a -> HSet s -> ST s (HKey a)
 insert x (HSet xs count) = do
   let (TypeRep f _ _ _) = typeOf x
   c <- fromMaybe 0 <$> HT.lookup count f
@@ -41,7 +41,7 @@ insert x (HSet xs count) = do
   pure (HKey k)
 
 
-lookup :: ( Typeable a ) => HKey a -> HSet s -> ST s (Maybe a)
+lookup :: Typeable a => HKey a -> HSet s -> ST s (Maybe a)
 lookup (HKey k) (HSet xs _) = (>>= fromDynamic) <$> HT.lookup xs k
 
 

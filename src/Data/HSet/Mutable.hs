@@ -12,7 +12,8 @@ import Data.HSet.Types
 import Prelude hiding (lookup, length)
 import Data.Maybe (fromMaybe)
 
-import Data.Typeable.Internal (Fingerprint, TypeRep (TypeRep))
+import Data.Typeable (typeOf, typeRepFingerprint)
+import GHC.Fingerprint
 import Data.Dynamic
 
 import           Data.HashTable.ST.Basic (HashTable)
@@ -33,7 +34,7 @@ new = HSet <$> HT.new <*> HT.new
 
 insert :: Typeable a => a -> HSet s -> ST s (HKey a)
 insert x (HSet xs count) = do
-  let (TypeRep f _ _ _) = typeOf x
+  let f = typeRepFingerprint $ typeOf x
   c <- fromMaybe 0 <$> HT.lookup count f
   HT.insert count f (c+1)
   let k = HKey' f c

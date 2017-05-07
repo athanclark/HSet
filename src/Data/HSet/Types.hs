@@ -4,8 +4,7 @@
 
 module Data.HSet.Types where
 
-import Data.Typeable.Internal (Fingerprint (..))
-
+import GHC.Fingerprint (Fingerprint(..))
 import GHC.Generics
 import Data.Hashable
 

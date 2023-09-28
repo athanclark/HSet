@@ -15,10 +15,6 @@ data HKey' = HKey'
   , getTypeCount :: {-# UNPACK #-} !Int
   } deriving (Eq, Generic)
 
-instance Hashable Fingerprint where
-  hashWithSalt s (Fingerprint x y) =
-    s `hashWithSalt` x `hashWithSalt` y
-
 instance Hashable HKey'
 
 newtype HKey a = HKey
